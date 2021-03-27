@@ -14,71 +14,78 @@
 \CreateMatrix{ltxbfs@bm}{0}{0}
 \CreateQueue{ltxbfs@qu}
 
-\def\@ltxbfs@debug@void@state(#1,#2)(#3,#4)#5#6{}
+\def\@ltxbfs@debug@void@state(#1)(#2)#3#4{}
 % Debug the current State
-% (#1,#2) start; (#3,#4) end; #5 comment; #6 queue to highlight
-\def\@ltxbfs@debug@@state(#1,#2)(#3,#4)#5#6{%
-#5\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
-\lbfsma@ifpoint(\CurMatrixX,\CurMatrixY)=(#1,#2){%
+% (#1) starts; (#2) ends; #3 comment; #4 queue to highlight
+\def\@ltxbfs@debug@@state(#1)(#2)#3#4{%
+#3\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{%
     \textcolor{purple}{>}%
 }{%
-\lbfsma@ifpoint(\CurMatrixX,\CurMatrixY)=(#3,#4){%
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{%
     \textcolor{purple}{<}%
 }{%
-\IfInQueue{#6}{\CurMatrixX/\CurMatrixY}{\textcolor{teal}{X}}{%
-\ltxbfs@ifblocked(\CurMatrixX,\CurMatrixY){\#}{\textcolor{gray}{-}}%
+\IfInQueue{#4}{\CurMatrixX/\CurMatrixY}{\textcolor{teal}{X}}{%
+\ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{\textcolor{gray}{-}}%
 }}}}\\}}
 
 \ifltxbfs@do@debug@
 \let\@ltxbfs@debug@state\@ltxbfs@debug@@state
 \else\let\@ltxbfs@debug@state\@ltxbfs@debug@void@state\fi
+
+\def\ltxbfs@setup@startstates#1{%
+\@for\pnt:=#1\do{%
+\advance\c@ltxbfs@qu@pointref\@ne
+\DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
+\Enqueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}{}%
+\eEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
+}}
+
 % every point will be assigned an incrementing counter
 % which will be linked to it's queue
 \newif\if@ltxbfs@foundgoal@
-% (start) -> (end) [width x height]{IsItBlocked(x,y){yes}{no}}{result queue}
-\def\GetShortestPath(#1,#2)->(#3,#4)[#5x#6]#7#8{\begingroup
+% multiple starts and ends
+% (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
+\def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
 \c@ltxbfs@qu@pointref0\relax
-\UpdateMatrix{ltxbfs@bm}{#5}{#6}%
+\UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
-\def\ltxbfs@ifblocked{\@nameuse{#7}}%
-\@ltxbfs@debug@state(#1,#2)(#3,#4){Initialization}{}%
-\DeclareQueue{ltxbfs@pointq@0}%
-\Enqueue{ltxbfs@pointq@0}{}%
-\eEnqueue{ltxbfs@qu}{#1/#2;0}%
-\ltxbfs@bfs(#3,#4)%
+\def\ltxbfs@ifblocked{\@nameuse{#5}}%
+\@ltxbfs@debug@state(#1)(#2){Initialization}{}%
+\ltxbfs@setup@startstates{#1}%
+\ltxbfs@bfs(#2)%
 \if@ltxbfs@foundgoal@
-\AppendQueue{#8}{ltxbfs@pointq@\@goalp}%
-\@ltxbfs@debug@state(#1,#2)(#3,#4){Final State}{ltxbfs@pointq@\@goalp}%
+\AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
+\@ltxbfs@debug@state(#1)(#2){Final State}{ltxbfs@pointq@\@goalp}%
 \else
-\@ltxbfs@debug@state(#1,#2)(#3,#4){Final State}{}%
-\fi\GlobalQueue{#8}\endgroup}
+\@ltxbfs@debug@state(#1)(#2){Final State}{}%
+\fi\GlobalQueue{#6}\endgroup}
 
 \def\ltxbfs@breakloop{\let\iterate\relax}
 \def\ltxbfs@@ldpt#1/#2;#3\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}}
 \def\ltxbfs@ldpt#1\@nil{\expandafter\ltxbfs@@ldpt#1\@nil}
 % end
-\def\ltxbfs@bfs(#1,#2){%
+\def\ltxbfs@bfs(#1){%
 \loop
 % Pick point from the queue
 \Dequeue{ltxbfs@qu}%
 \expandafter\ltxbfs@ldpt\dequeued\@nil
-\lbfsma@ifpoint(\@curx,\@cury)=(#1,#2){%
+\lbfsma@ifpointinqueue(\@curx/\@cury) in {#1}{%
     \edef\@goalx{\@curx}\edef\@goaly{\@cury}\edef\@goalp{\@curp}%
-    \@ltxbfs@foundgoal@true
-    \ltxbfs@breakloop
+    \@ltxbfs@foundgoal@true\ltxbfs@breakloop
 }{\ltxbfs@bfs@nexts}%
 \ifnum\GetQueueSize{ltxbfs@qu}>0
 \repeat
 }
 
 % will check if in bound of bitmap matrix and if not blocked
-\def\ltxbfs@isvalidtarget(#1,#2)#3#4{%
+\def\ltxbfs@isvalidtarget(#1/#2)#3#4{%
 \ifnum#1<0 #4\else\ifnum#2<0 #4\else
 \ifnum#1<\GetMatrixWidth{ltxbfs@bm}%
     \ifnum#2<\GetMatrixHeight{ltxbfs@bm}%
-        \ltxbfs@ifblocked(#1,#2){#4}{%
-            \IfMatrixBlocked{ltxbfs@bm}(#1,#2){#4}{#3}
+        \ltxbfs@ifblocked(#1/#2){#4}{%
+            \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
         }%
     \else#4\fi
 \else#4\fi
@@ -88,27 +95,26 @@
 % queue to add | queue as source
 \def\ExtendToPointPath#1#2{%
 \DeclareQueue{ltxbfs@pointq@#1}%
-\ifnum#2>0 \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
+\ifnum#2>1 \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
 \eEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
 }
 
-\def\ltxbfs@bfs@trydir(#1,#2){%
+\def\ltxbfs@bfs@trydir(#1/#2){%
 \edef\@tx{#1}\edef\@ty{#2}%
-\ltxbfs@isvalidtarget(\@tx,\@ty){
-%\typeout{Adding: (\@tx, \@ty)}
-\BlockMatrix{ltxbfs@bm}(\@tx,\@ty)%
+\ltxbfs@isvalidtarget(\@tx/\@ty){
+%\typeout{Adding: (\@tx/\@ty)}
+\BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
 \ExtendToPointPath{\number\c@ltxbfs@qu@pointref}{\@curp}%
 \eEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref}%
-}{}%
-}
+}{}}
 
 % TODO: order by current direction by saving (/w enqueue) it for point?
 \def\ltxbfs@bfs@nexts{%
 % add further points
-\ltxbfs@bfs@trydir(\@curx,\the\numexpr\@cury+1\relax)% up
-\ltxbfs@bfs@trydir(\@curx,\the\numexpr\@cury-1\relax)% down
-\ltxbfs@bfs@trydir(\the\numexpr\@curx+1\relax,\@cury)% left
-\ltxbfs@bfs@trydir(\the\numexpr\@curx-1\relax,\@cury)% right
+\ltxbfs@bfs@trydir(\@curx/\the\numexpr\@cury+1\relax)% up
+\ltxbfs@bfs@trydir(\@curx/\the\numexpr\@cury-1\relax)% down
+\ltxbfs@bfs@trydir(\the\numexpr\@curx+1\relax/\@cury)% left
+\ltxbfs@bfs@trydir(\the\numexpr\@curx-1\relax/\@cury)% right
 }
 \endinput

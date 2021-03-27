@@ -19,10 +19,10 @@
 
 \def\GetMatrixWidth#1{\csname lbfsma@ds@matrix@#1@w\endcsname}
 \def\GetMatrixHeight#1{\csname lbfsma@ds@matrix@#1@h\endcsname}
-\def\GetMatrix#1(#2,#3){\csname lbfsma@ds@matrix@#1@#2@#3\endcsname}
+\def\GetMatrix#1(#2/#3){\csname lbfsma@ds@matrix@#1@#2@#3\endcsname}
 \def\CurMatrixX{\number\c@lbfsma@m@x}
 \def\CurMatrixY{\number\c@lbfsma@m@y}
-\def\SetMatrix#1(#2,#3)#4{\expandafter\def\csname lbfsma@ds@matrix@#1@#2@#3\endcsname{#4}}
+\def\SetMatrix#1(#2/#3)#4{\expandafter\def\csname lbfsma@ds@matrix@#1@#2@#3\endcsname{#4}}
 
 \def\ResetMatrix#1{%
 \MatrixForY{#1}{\MatrixForX{#1}{%
@@ -41,13 +41,22 @@
 
 % BitMap-Specific
 \def\lbfsma@m@@blocked{1}
-\def\BlockMatrix#1(#2,#3){\expandafter\let\csname lbfsma@ds@matrix@#1@#2@#3\endcsname\lbfsma@m@@blocked}
+\def\BlockMatrix#1(#2/#3){\expandafter\let\csname lbfsma@ds@matrix@#1@#2@#3\endcsname\lbfsma@m@@blocked}
 
 
-\def\IfMatrixBlocked#1(#2,#3)#4#5{\ifcsname lbfsma@ds@matrix@#1@#2@#3\endcsname#4\else#5\fi}
+\def\IfMatrixBlocked#1(#2/#3)#4#5{\ifcsname lbfsma@ds@matrix@#1@#2@#3\endcsname#4\else#5\fi}
 
-\def\lbfsma@ifpoint(#1,#2)=(#3,#4)#5#6{%
+\def\lbfsma@ifpoint(#1/#2)=(#3/#4)#5#6{%
     \ifnum#1=#3\relax\ifnum#2=#4\relax#5\else#6\fi\else#6\fi
+}
+
+\newif\if@lbfsma@inq@
+% TODO: maybe make more efficient?
+\def\lbfsma@ifpointinqueue(#1/#2) in #3#4#5{%
+\@lbfsma@inq@false
+\def\do##1{\IfStrEq{##1}{#1/#2}{\@lbfsma@inq@true\listbreak}{}}%
+\edef\@tmp{\noexpand\docsvlist{#3}}\@tmp
+\if@lbfsma@inq@#4\else#5\fi
 }
 
 \endinput

@@ -8,45 +8,53 @@
 \CreateQueue{Result}%
 \begin{document}
 \ttfamily\noindent
-\BlockMatrix{TestMatrix}(0,0)%
-\BlockMatrix{TestMatrix}(3,3)%
-\BlockMatrix{TestMatrix}(4,5)%
-\BlockMatrix{TestMatrix}(1,4)%
+\BlockMatrix{TestMatrix}(0/0)%
+\BlockMatrix{TestMatrix}(3/3)%
+\BlockMatrix{TestMatrix}(4/5)%
+\BlockMatrix{TestMatrix}(1/4)%
 The Matrix:\\
 \MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
-    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{\textcolor{gray}{X}}%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
 }\\}%
 %
-\def\CheckBlock(#1,#2)#3#4{\IfMatrixBlocked{TestMatrix}(#1,#2){#3}{#4}}
+\def\CheckBlock(#1/#2)#3#4{\IfMatrixBlocked{TestMatrix}(#1/#2){#3}{#4}}
 %
-\GetShortestPath(1,1)->(4,6)[10x7]{CheckBlock}{Result}
+\GetShortestPath(1/1)->(4/6)[10x7]{CheckBlock}{Result}
 Erhalte: \GetQueue{Result}.
 
 \clearpage\section{Another large Test}
 \UpdateMatrix{TestMatrix}{65}{12}
-\BlockMatrix{TestMatrix}(0,0)%
-\BlockMatrix{TestMatrix}(3,3)%
-\BlockMatrix{TestMatrix}(4,5)%
-\BlockMatrix{TestMatrix}(1,4)%
+\BlockMatrix{TestMatrix}(0/0)%
+\BlockMatrix{TestMatrix}(3/3)%
+\BlockMatrix{TestMatrix}(4/5)%
+\BlockMatrix{TestMatrix}(1/4)%
 \foreach\i in {0,...,10}{%
     \globaldefs=1
-    \BlockMatrix{TestMatrix}(2,\i)%
-    \BlockMatrix{TestMatrix}(15,\i)%
-    \BlockMatrix{TestMatrix}(17,\the\numexpr\i+1\relax)%
-    \BlockMatrix{TestMatrix}(19,\i)%
-    \BlockMatrix{TestMatrix}(21,\the\numexpr\i+1\relax)%
-    \BlockMatrix{TestMatrix}(23,\i)%
-    \BlockMatrix{TestMatrix}(25,\the\numexpr\i+1\relax)%
-    \BlockMatrix{TestMatrix}(27,\i)%
-    \BlockMatrix{TestMatrix}(29,\the\numexpr\i+1\relax)%
-    \BlockMatrix{TestMatrix}(31,\i)%
+    \BlockMatrix{TestMatrix}(2/\i)%
+    \BlockMatrix{TestMatrix}(15/\i)%
+    \BlockMatrix{TestMatrix}(17/\the\numexpr\i+1\relax)%
+    \BlockMatrix{TestMatrix}(19/\i)%
+    \BlockMatrix{TestMatrix}(21/\the\numexpr\i+1\relax)%
+    \BlockMatrix{TestMatrix}(23/\i)%
+    \BlockMatrix{TestMatrix}(25/\the\numexpr\i+1\relax)%
+    \BlockMatrix{TestMatrix}(27/\i)%
+    \BlockMatrix{TestMatrix}(29/\the\numexpr\i+1\relax)%
+    \BlockMatrix{TestMatrix}(31/\i)%
 }
 
 The Matrix:\\
 \MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
-    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{\textcolor{gray}{X}}%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
 }\\}%
 %
-\GetShortestPath(1,1)->(55,0)[65x12]{CheckBlock}{Result}%
+\GetShortestPath(1/1)->(55/0)[65x12]{CheckBlock}{Result}%
+Erhalte: \GetQueue{Result}.
+
+\clearpage\section{Multiple Starts and Ends}
+The Matrix:\\
+\MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
+}\\}%
+\GetShortestPath(1/1,5/5,6/5,7/5)->(55/0,55/1,55/2,55/3,55/4)[65x12]{CheckBlock}{Result}%
 Erhalte: \GetQueue{Result}.
 \end{document}
