@@ -1,11 +1,13 @@
 \documentclass{article}
-\usepackage{latex-bfs-matrix}
+\usepackage{xcolor,latex-bfs-matrix}
 \CreateMatrix{TestMatrix}{10}{7}
 
 \begin{document}
 \ttfamily\noindent
+\BlockMatrix{TestMatrix}(0,0)%
 \BlockMatrix{TestMatrix}(3,3)%
+\BlockMatrix{TestMatrix}(4,6)%
 \MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
-    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{X}%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{\textcolor{gray}{X}}%
 }\\}%
 \end{document}

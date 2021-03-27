@@ -1,7 +1,39 @@
+\errorcontextlines 99999
 \documentclass{article}
 
-\usepackage{latex-bfs}
+\usepackage{xcolor,latex-bfs,pgffor}
+\CreateMatrix{TestMatrix}{10}{7}
 
 \begin{document}
+\ttfamily\noindent
+\BlockMatrix{TestMatrix}(0,0)%
+\BlockMatrix{TestMatrix}(3,3)%
+\BlockMatrix{TestMatrix}(4,5)%
+\BlockMatrix{TestMatrix}(1,4)%
+The Matrix:\\
+\MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{\textcolor{gray}{X}}%
+}\\}%
+%
+\def\CheckBlock(#1,#2)#3#4{\IfMatrixBlocked{TestMatrix}(#1,#2){#3}{#4}}
+%
+\GetShortestPath(1,1)->(4,6)[10x7]{CheckBlock}
 
+\clearpage\section{Another large Test}
+\UpdateMatrix{TestMatrix}{65}{12}
+\BlockMatrix{TestMatrix}(0,0)%
+\BlockMatrix{TestMatrix}(3,3)%
+\BlockMatrix{TestMatrix}(4,5)%
+\BlockMatrix{TestMatrix}(1,4)%
+\foreach\i in {0,...,11}{%
+    \globaldefs=1
+    \BlockMatrix{TestMatrix}(15,\i)%
+}
+
+The Matrix:\\
+\MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX,\CurMatrixY){A}{\textcolor{gray}{X}}%
+}\\}%
+%
+\GetShortestPath(1,1)->(55,10)[65x14]{CheckBlock}%
 \end{document}

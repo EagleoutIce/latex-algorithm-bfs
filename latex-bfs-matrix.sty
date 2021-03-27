@@ -1,46 +1,53 @@
 \ProvidesPackage{latex-bfs-matrix}[2021/03/27 v1.0 Implementation of a 2D matrix data structure using macros]
 \RequirePackage{etoolbox}
-\newcounter{lbfsqu@m@x}\newcounter{lbfsqu@m@y}
+\newcounter{lbfsma@m@x}\newcounter{lbfsma@m@y}
 % Note: for bitmap, unblocked fields are not defined
-
 
 % name | width | height
 \def\CreateMatrix#1#2#3{%
-\ifcsname lbfsqu@ds@matrix@#1@w\endcsname
+\ifcsname lbfsma@ds@matrix@#1@w\endcsname
     \PackageError{The Matrix '#1' does already exist.}\fi
-\expandafter\edef\csname lbfsqu@ds@matrix@#1@w\endcsname{#2}%
-\expandafter\edef\csname lbfsqu@ds@matrix@#1@h\endcsname{#3}%
-\c@lbfsqu@m@y0\relax
+    \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
+    \expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
 }
 
-\def\GetMatrixWidth#1{\csname lbfsqu@ds@matrix@#1@w\endcsname}
-\def\GetMatrixHeight#1{\csname lbfsqu@ds@matrix@#1@h\endcsname}
-\def\GetMatrix#1(#2,#3){\csname lbfsqu@ds@matrix@#1@#2@#3\endcsname}
-\def\CurMatrixX{\number\c@lbfsqu@m@x}
-\def\CurMatrixY{\number\c@lbfsqu@m@y}
-\def\SetMatrix#1(#2,#3)#4{\expandafter\def\csname lbfsqu@ds@matrix@#1@#2@#3\endcsname{#4}}
+\def\UpdateMatrix#1#2#3{
+    \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
+    \expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
+    \ResetMatrix{#1}%
+}
+
+\def\GetMatrixWidth#1{\csname lbfsma@ds@matrix@#1@w\endcsname}
+\def\GetMatrixHeight#1{\csname lbfsma@ds@matrix@#1@h\endcsname}
+\def\GetMatrix#1(#2,#3){\csname lbfsma@ds@matrix@#1@#2@#3\endcsname}
+\def\CurMatrixX{\number\c@lbfsma@m@x}
+\def\CurMatrixY{\number\c@lbfsma@m@y}
+\def\SetMatrix#1(#2,#3)#4{\expandafter\def\csname lbfsma@ds@matrix@#1@#2@#3\endcsname{#4}}
 
 \def\ResetMatrix#1{%
 \MatrixForY{#1}{\MatrixForX{#1}{%
-    \expandafter\undef\csname lbfsqu@ds@matrix@#1@\number\c@lbfsqu@m@x @\number\c@lbfsqu@m@y\endcsname%
+    \expandafter\undef\csname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
 }}}
 
 \newcommand\MatrixForX[3][0]{%
-\c@lbfsqu@m@x#1\relax
-\@whilenum\c@lbfsqu@m@x<\csname lbfsqu@ds@matrix@#2@w\endcsname\do{\relax#3\advance\c@lbfsqu@m@x\@ne}%
+\c@lbfsma@m@x#1\relax
+\@whilenum\c@lbfsma@m@x<\csname lbfsma@ds@matrix@#2@w\endcsname\do{\relax#3\advance\c@lbfsma@m@x\@ne}%
 }
 
 \newcommand\MatrixForY[3][0]{%
-\c@lbfsqu@m@y#1\relax
-\@whilenum\c@lbfsqu@m@y<\csname lbfsqu@ds@matrix@#2@h\endcsname\do{\relax#3\advance\c@lbfsqu@m@y\@ne}%
+\c@lbfsma@m@y#1\relax
+\@whilenum\c@lbfsma@m@y<\csname lbfsma@ds@matrix@#2@h\endcsname\do{\relax#3\advance\c@lbfsma@m@y\@ne}%
 }
 
 % BitMap-Specific
-\def\lbfsqu@m@@blocked{1}
-\def\BlockMatrix#1(#2,#3){\expandafter\let\csname lbfsqu@ds@matrix@#1@#2@#3\endcsname\lbfsqu@m@@blocked}
+\def\lbfsma@m@@blocked{1}
+\def\BlockMatrix#1(#2,#3){\expandafter\let\csname lbfsma@ds@matrix@#1@#2@#3\endcsname\lbfsma@m@@blocked}
 
 
-\def\IfMatrixBlocked#1(#2,#3)#4#5{\ifcsname lbfsqu@ds@matrix@#1@#2@#3\endcsname#4\else#5\fi}
+\def\IfMatrixBlocked#1(#2,#3)#4#5{\ifcsname lbfsma@ds@matrix@#1@#2@#3\endcsname#4\else#5\fi}
 
+\def\lbfsma@ifpoint(#1,#2)=(#3,#4)#5#6{%
+    \ifnum#1=#3\relax\ifnum#2=#4\relax#5\else#6\fi\else#6\fi
+}
 
 \endinput

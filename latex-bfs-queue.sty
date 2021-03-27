@@ -1,11 +1,16 @@
 \ProvidesPackage{latex-bfs-queue}[2021/03/27 v1.0 Implementation of a queue data structure]
-\RequirePackage{etoolbox}
+\RequirePackage{etoolbox,xstring}
 
 \def\CreateQueue#1{%
-    \ifcsname lbfsqu@ds@queue@#1\endcsname
+    \ifcsname c@lbfsqu@ds@queue@#1\endcsname
         \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
     \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
     \newcounter{lbfsqu@ds@queue@#1}%
+}
+
+\def\DeclareQueue#1{%
+    \ifcsname c@lbfsqu@ds@queue@#1\endcsname\ResetQueue{#1}\else
+    \CreateQueue{#1}\fi
 }
 
 \def\ResetQueue#1{%
@@ -60,4 +65,18 @@
     \setcounter{lbfsqu@ds@queue@#1}{\value{lbfsqu@ds@queue@#1}}%
 }
 
+\newif\if@lbfsqu@inq@
+% TODO: maybe make more efficient?
+% if #2 in #1 do #3; else #4
+\def\IfInQueue#1#2#3#4{\@lbfsqu@inq@false
+\def\do##1{\IfStrEq{##1}{#2}{\@lbfsqu@inq@true\listbreak}{}}%
+\edef\@tmp{\noexpand\docsvlist{\csexpandonce{lbfsqu@ds@queue@#1}}}\@tmp%
+\if@lbfsqu@inq@#3\else#4\fi
+}
+
+\def\AppendQueue#1#2{%
+\ifnum\value{lbfsqu@ds@queue@#1}=0\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\GetQueue{#2}}\else
+\protected@cseappto{lbfsqu@ds@queue@#1}{,\GetQueue{#2}}\fi
+\expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\GetQueueSize{#2}%
+}
 \endinput
