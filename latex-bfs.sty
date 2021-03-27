@@ -1,4 +1,10 @@
 \ProvidesPackage{latex-bfs}[2021/03/27 v1.0 implementation of an bfs algorithm]
+
+\newif\ifltxbfs@do@debug@
+\DeclareOption{debug}{\ltxbfs@do@debug@true}
+\DeclareOption{nodebug}{\ltxbfs@do@debug@false}
+\ProcessOptions*
+
 \RequirePackage{latex-bfs-queue,latex-bfs-matrix}
 
 \RequirePackage{xcolor}% debug
@@ -8,9 +14,10 @@
 \CreateMatrix{ltxbfs@bm}{0}{0}
 \CreateQueue{ltxbfs@qu}
 
+\def\@ltxbfs@debug@void@state(#1,#2)(#3,#4)#5#6{}
 % Debug the current State
 % (#1,#2) start; (#3,#4) end; #5 comment; #6 queue to highlight
-\def\@ltxbfs@debug@state(#1,#2)(#3,#4)#5#6{%
+\def\@ltxbfs@debug@@state(#1,#2)(#3,#4)#5#6{%
 #5\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
 \lbfsma@ifpoint(\CurMatrixX,\CurMatrixY)=(#1,#2){%
     \textcolor{purple}{>}%
@@ -22,12 +29,14 @@
 \ltxbfs@ifblocked(\CurMatrixX,\CurMatrixY){\#}{\textcolor{gray}{-}}%
 }}}}\\}}
 
+\ifltxbfs@do@debug@
+\let\@ltxbfs@debug@state\@ltxbfs@debug@@state
+\else\let\@ltxbfs@debug@state\@ltxbfs@debug@void@state\fi
 % every point will be assigned an incrementing counter
 % which will be linked to it's queue
 \newif\if@ltxbfs@foundgoal@
-% (start) -> (end) [width x height]{IsItBlocked(x,y){yes}{no}}
-% TODO: globalize/export the path
-\def\GetShortestPath(#1,#2)->(#3,#4)[#5x#6]#7{\begingroup%
+% (start) -> (end) [width x height]{IsItBlocked(x,y){yes}{no}}{result queue}
+\def\GetShortestPath(#1,#2)->(#3,#4)[#5x#6]#7#8{\begingroup
 \c@ltxbfs@qu@pointref0\relax
 \UpdateMatrix{ltxbfs@bm}{#5}{#6}%
 \ResetQueue{ltxbfs@qu}%
@@ -39,15 +48,11 @@
 \eEnqueue{ltxbfs@qu}{#1/#2;0}%
 \ltxbfs@bfs(#3,#4)%
 \if@ltxbfs@foundgoal@
-Found goal: \@goalx/\@goaly; (\GetQueue{ltxbfs@pointq@\@goalp})%
-\par\noindent%
-Cycles: \@goalp;
+\AppendQueue{#8}{ltxbfs@pointq@\@goalp}%
 \@ltxbfs@debug@state(#1,#2)(#3,#4){Final State}{ltxbfs@pointq@\@goalp}%
 \else
-Couldn't find goal.
-\fi
 \@ltxbfs@debug@state(#1,#2)(#3,#4){Final State}{}%
-\endgroup}
+\fi\GlobalQueue{#8}\endgroup}
 
 \def\ltxbfs@breakloop{\let\iterate\relax}
 \def\ltxbfs@@ldpt#1/#2;#3\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}}
@@ -106,6 +111,4 @@ Couldn't find goal.
 \ltxbfs@bfs@trydir(\the\numexpr\@curx+1\relax,\@cury)% left
 \ltxbfs@bfs@trydir(\the\numexpr\@curx-1\relax,\@cury)% right
 }
-
-
 \endinput
