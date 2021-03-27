@@ -2,6 +2,8 @@
 \RequirePackage{etoolbox}
 
 \def\CreateQueue#1{%
+    \ifcsname lbfsqu@ds@queue@#1\endcsname
+        \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
     \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
     \newcounter{lbfsqu@ds@queue@#1}%
 }
