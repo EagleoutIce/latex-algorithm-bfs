@@ -1,0 +1,44 @@
+\errorcontextlines 99999
+\documentclass{article}
+
+\usepackage[prefix=]{xcolor-solarized}
+\usepackage{enumitem}
+\usepackage{latex-bfs-queue}
+
+\CreateQueue{TestQueue}
+
+
+\def\Add#1{Add (\textcolor{teal}{#1})\\\Enqueue{TestQueue}{#1}\GetQueue{TestQueue}}
+\def\Remove{\Dequeue{TestQueue}Deq (\textcolor{purple}{\dequeued})\\\GetQueue{TestQueue}}
+
+\def\DoTestQueue#1{%
+\colorbox{gray!10!white}{%
+\parbox{.45\linewidth}{\begin{itemize}[leftmargin=*,nosep]
+    \item Initial:\\\GetQueue{TestQueue}
+    \item \Add{x}
+    \item \Add{y}
+    \item \Add{z, 12}
+    \item \Remove
+    \item \Remove
+    \item \Add{Elefant}
+    \item \Remove
+    \item \Remove
+    \item \Remove
+    \item \Add{1}
+    \item \Add{1, 2}
+    \item \Add{1, 2, 3}
+    \item \Add{4}
+    \item \Add{5}
+    \item \Remove
+    \item \Remove
+    \item \Remove
+    #1
+\end{itemize}}}}
+
+\begin{document}
+\DoTestQueue{\GlobalQueue{TestQueue}}\hfill
+\DoTestQueue{\GlobalQueue{TestQueue}}\\
+\ResetQueue{TestQueue}%
+\DoTestQueue{}\hfill\DoTestQueue{}
+\end{document}
+
