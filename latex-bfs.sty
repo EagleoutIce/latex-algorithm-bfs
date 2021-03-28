@@ -7,7 +7,9 @@
 
 \RequirePackage{latex-bfs-queue,latex-bfs-matrix}
 
-\RequirePackage{xcolor}% debug
+\ifltxbfs@do@debug@
+\RequirePackage{xcolor}
+\fi
 
 % Note: The implementation does not allow diagonal movement
 \newcounter{ltxbfs@qu@pointref}
@@ -15,10 +17,10 @@
 \CreateMatrix{ltxbfs@bm}{0}{0}
 \CreateQueue{ltxbfs@qu}
 
-\def\@ltxbfs@debug@void@state(#1)(#2)#3#4{}
+\def\@ltxbfs@debug@void@state#1#2#3#4{}
 % Debug the current State
 % (#1) starts; (#2) ends; #3 comment; #4 queue to highlight
-\def\@ltxbfs@debug@@state(#1)(#2)#3#4{%
+\def\@ltxbfs@debug@@state#1#2#3#4{%
 #3\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
 \lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{%
     \textcolor{purple}{>}%
@@ -56,17 +58,16 @@
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
 \def\ltxbfs@ifblocked{\@nameuse{#5}}%
-\@ltxbfs@debug@state(#1)(#2){Initialization}{}%
+\@ltxbfs@debug@state{#1}{#2}{Initialization}{}%
 \ltxbfs@setup@startstates{#1}%
 \ltxbfs@bfs(#2)%
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
-\@ltxbfs@debug@state(#1)(#2){Final State}{ltxbfs@pointq@\@goalp}%
+\@ltxbfs@debug@state{#1}{#2}{Final State}{ltxbfs@pointq@\@goalp}%
 \else
-\@ltxbfs@debug@state(#1)(#2){Final State}{}%
+\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
 
-\def\ltxbfs@breakloop{\let\iterate\relax}
 \def\ltxbfs@@ldpt#1/#2;#3\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}}
 \def\ltxbfs@ldpt#1\@nil{\expandafter\ltxbfs@@ldpt#1\@nil}
 % end
@@ -77,7 +78,7 @@
 \expandafter\ltxbfs@ldpt\dequeued\@nil
 \lbfsma@ifpointinqueue(\@curx/\@cury) in {#1}{%
     \edef\@goalx{\@curx}\edef\@goaly{\@cury}\edef\@goalp{\@curp}%
-    \@ltxbfs@foundgoal@true\ltxbfs@breakloop
+    \@ltxbfs@foundgoal@true\let\iterate\relax
 }{\ltxbfs@bfs@nexts}%
 \ifnum\GetQueueSize{ltxbfs@qu}>0
 \repeat

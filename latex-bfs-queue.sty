@@ -75,8 +75,8 @@
 }
 
 \def\AppendQueue#1#2{%
-\ifnum\value{lbfsqu@ds@queue@#1}=0\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\GetQueue{#2}}\else
-\protected@cseappto{lbfsqu@ds@queue@#1}{,\GetQueue{#2}}\fi
-\expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\GetQueueSize{#2}%
+\ifnum\value{lbfsqu@ds@queue@#1}=0\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\csname lbfsqu@ds@queue@#2\endcsname}\else
+\protected@cseappto{lbfsqu@ds@queue@#1}{,\csname lbfsqu@ds@queue@#2\endcsname}\fi
+\expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\value{lbfsqu@ds@queue@#2}%
 }
 \endinput

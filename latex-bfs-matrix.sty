@@ -5,7 +5,7 @@
 
 % name | width | height
 \def\CreateMatrix#1#2#3{%
-\ifcsname lbfsma@ds@matrix@#1@w\endcsname
+    \ifcsname lbfsma@ds@matrix@#1@w\endcsname
     \PackageError{The Matrix '#1' does already exist.}\fi
     \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
     \expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
@@ -26,7 +26,9 @@
 
 \def\ResetMatrix#1{%
 \MatrixForY{#1}{\MatrixForX{#1}{%
+    \ifcsname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
     \expandafter\undef\csname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
+    \fi
 }}}
 
 \newcommand\MatrixForX[3][0]{%
