@@ -66,11 +66,10 @@
 }
 
 \newif\if@lbfsqu@inq@
-% TODO: maybe make more efficient?
 % if #2 in #1 do #3; else #4
 \def\IfInQueue#1#2#3#4{\@lbfsqu@inq@false
 \def\do##1{\IfStrEq{##1}{#2}{\@lbfsqu@inq@true\listbreak}{}}%
-\edef\@tmp{\noexpand\docsvlist{\csexpandonce{lbfsqu@ds@queue@#1}}}\@tmp%
+\edef\@tmp{\noexpand\docsvlist{\csexpandonce{lbfsqu@ds@queue@#1}}}\@tmp
 \if@lbfsqu@inq@#3\else#4\fi
 }
 

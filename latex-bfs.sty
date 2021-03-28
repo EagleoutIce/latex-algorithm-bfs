@@ -51,7 +51,6 @@
 % multiple starts and ends
 % (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
 \def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
-%\typeout{(#1) -> (#2) [#3x#4]}%
 \c@ltxbfs@qu@pointref0\relax
 \c@ltxbfs@qu@pointref@start0\relax
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
@@ -86,9 +85,9 @@
 
 % will check if in bound of bitmap matrix and if not blocked
 \def\ltxbfs@isvalidtarget(#1/#2)#3#4{%
-\ifnum#1<0 #4\else\ifnum#2<0 #4\else
+\ifnum#1<0 #4\else\ifnum#2<0 #4\else% < 0
 \ifnum#1<\GetMatrixWidth{ltxbfs@bm}%
-    \ifnum#2<\GetMatrixHeight{ltxbfs@bm}%
+    \ifnum#2<\GetMatrixHeight{ltxbfs@bm}% is in field
         \ltxbfs@ifblocked(#1/#2){#4}{%
             \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
         }%

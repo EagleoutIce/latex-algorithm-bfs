@@ -20,8 +20,7 @@
 \def\GetMatrixWidth#1{\csname lbfsma@ds@matrix@#1@w\endcsname}
 \def\GetMatrixHeight#1{\csname lbfsma@ds@matrix@#1@h\endcsname}
 \def\GetMatrix#1(#2/#3){\csname lbfsma@ds@matrix@#1@#2@#3\endcsname}
-\def\CurMatrixX{\number\c@lbfsma@m@x}
-\def\CurMatrixY{\number\c@lbfsma@m@y}
+\def\CurMatrixX{\number\c@lbfsma@m@x}\def\CurMatrixY{\number\c@lbfsma@m@y}
 \def\SetMatrix#1(#2/#3)#4{\expandafter\def\csname lbfsma@ds@matrix@#1@#2@#3\endcsname{#4}}
 
 \def\ResetMatrix#1{%
@@ -53,7 +52,6 @@
 }
 
 \newif\if@lbfsma@inq@
-% TODO: maybe make more efficient?
 \def\lbfsma@ifpointinqueue(#1/#2) in #3#4#5{%
 \@lbfsma@inq@false
 \def\do##1{\IfStrEq{##1}{#1/#2}{\@lbfsma@inq@true\listbreak}{}}%
