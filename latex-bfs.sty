@@ -11,6 +11,7 @@
 
 % Note: The implementation does not allow diagonal movement
 \newcounter{ltxbfs@qu@pointref}
+\newcounter{ltxbfs@qu@pointref@start}
 \CreateMatrix{ltxbfs@bm}{0}{0}
 \CreateQueue{ltxbfs@qu}
 
@@ -36,6 +37,7 @@
 \def\ltxbfs@setup@startstates#1{%
 \@for\pnt:=#1\do{%
 \advance\c@ltxbfs@qu@pointref\@ne
+\advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
 \Enqueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}{}%
 \eEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
@@ -47,7 +49,9 @@
 % multiple starts and ends
 % (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
 \def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
+%\typeout{(#1) -> (#2) [#3x#4]}%
 \c@ltxbfs@qu@pointref0\relax
+\c@ltxbfs@qu@pointref@start0\relax
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
@@ -95,13 +99,13 @@
 % queue to add | queue as source
 \def\ExtendToPointPath#1#2{%
 \DeclareQueue{ltxbfs@pointq@#1}%
-\ifnum#2>1 \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
+\ifnum#2>\c@ltxbfs@qu@pointref@start\relax \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
 \eEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
 }
 
 \def\ltxbfs@bfs@trydir(#1/#2){%
 \edef\@tx{#1}\edef\@ty{#2}%
-\ltxbfs@isvalidtarget(\@tx/\@ty){
+\ltxbfs@isvalidtarget(\@tx/\@ty){%
 %\typeout{Adding: (\@tx/\@ty)}
 \BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
