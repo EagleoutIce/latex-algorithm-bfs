@@ -1,0 +1,5 @@
+target: LaTeX BFS algorithm
+
+profiles:
+  default:
+    grab-files: ["*.sty"]
