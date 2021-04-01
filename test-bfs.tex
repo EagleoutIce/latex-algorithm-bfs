@@ -57,4 +57,12 @@ The Matrix:\\
 }\\}%
 \GetShortestPath(1/1,5/5,6/5,7/5)->(55/0,55/1,55/2,55/3,55/4)[65x12]{CheckBlock}{Result}%
 Erhalte: \GetQueue{Result}.
+
+\clearpage\section{Swapped Starts and Ends}
+The Matrix:\\
+\MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
+}\\}%
+\GetShortestPath(55/0,55/1,55/2,55/3,55/4)->(1/1,5/5,6/5,7/5)[65x12]{CheckBlock}{Result}%
+Erhalte: \GetQueue{Result}.
 \end{document}
