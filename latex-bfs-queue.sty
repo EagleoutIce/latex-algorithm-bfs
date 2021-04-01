@@ -28,6 +28,7 @@
     \csappto{lbfsqu@ds@queue@#1}{,{#2}}\fi
 }
 
+% TODO: raw mode which does not enter unnec groups?
 \def\eEnqueue#1#2{%
     \expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\@ne
     \ifnum\value{lbfsqu@ds@queue@#1}=1\relax
