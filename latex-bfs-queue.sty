@@ -70,6 +70,9 @@
 \expandafter\expandafter\expandafter\docsvlist\expandafter\expandafter\expandafter{\csname lbq@ds@queue@#1\endcsname}%
 \if@lbq@inq@#3\else#4\fi}
 
+\def\ForQueue#1#2{\def\do##1{#2}%
+\expandafter\expandafter\expandafter\docsvlist\expandafter\expandafter\expandafter{\csname lbq@ds@queue@#1\endcsname}}
+
 \def\AppendQueue#1#2{%
 \ifnum\csname @@lbq@ds@queue@#1\endcsname=\z@\relax \expandafter\protected@edef\csname lbq@ds@queue@#1\endcsname{\csname lbq@ds@queue@#2\endcsname}\else
 \protected@cseappto{lbq@ds@queue@#1}{,\csname lbq@ds@queue@#2\endcsname}\fi

@@ -18,7 +18,7 @@ The Matrix:\\
 \def\CheckBlock(#1/#2)#3#4{\IfMatrixBlocked{TestMatrix}(#1/#2){#3}{#4}}
 %
 \GetShortestPath(1/1)->(4/6)[10x7]{CheckBlock}{Result}
-Erhalte: \GetQueue{Result}.
+Erhalte\ForQueue{Result}{ > #1}.
 
 \clearpage\section{Another large Test}
 \UpdateMatrix{TestMatrix}{65}{12}
@@ -46,7 +46,7 @@ The Matrix:\\
 }\\}%
 %
 \GetShortestPath(1/1)->(55/0)[65x12]{CheckBlock}{Result}%
-Erhalte: \GetQueue{Result}.
+{\tiny Erhalte\ForQueue{Result}{ > #1}.}
 
 \clearpage\section{Multiple Starts and Ends}
 The Matrix:\\
@@ -54,7 +54,7 @@ The Matrix:\\
     \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
 }\\}%
 \GetShortestPath(1/1,5/5,6/5,7/5)->(55/0,55/1,55/2,55/3,55/4)[65x12]{CheckBlock}{Result}%
-Erhalte: \GetQueue{Result}.
+{\tiny Erhalte\ForQueue{Result}{ > #1}.}
 
 \clearpage\section{Swapped Starts and Ends}
 The Matrix:\\
@@ -62,5 +62,30 @@ The Matrix:\\
     \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
 }\\}%
 \GetShortestPath(55/0,55/1,55/2,55/3,55/4)->(1/1,5/5,6/5,7/5)[65x12]{CheckBlock}{Result}%
-Erhalte: \GetQueue{Result}.
+{\tiny Erhalte\ForQueue{Result}{ > #1}.}
+
+\clearpage\section{Huge Test}
+\UpdateMatrix{TestMatrix}{65}{44}
+\foreach\y in {0,...,43}{%
+    \foreach\x in {0,...,64}{%
+        \globaldefs=1%
+        \pgfmathsetmacro\doplacex{int(mod(\x,4))}%
+        \pgfmathsetmacro\doplacey{int(mod(\y,3))}%
+        \ifnum\doplacex=\doplacey
+        \BlockMatrix{TestMatrix}(\x/\y)%
+        \else\ifnum\doplacex=2\ifnum\doplacey>0 \BlockMatrix{TestMatrix}(\x/\y)\fi\fi\fi
+        \ifnum\x=10\ifnum\y<38\BlockMatrix{TestMatrix}(\x/\y)\fi\fi
+        \ifnum\x=15\ifnum\y>5\BlockMatrix{TestMatrix}(\x/\y)\fi\fi
+        \ifnum\y=13\ifnum\x>15\ifnum\x<60\BlockMatrix{TestMatrix}(\x/\y)\fi\fi\fi
+        \ifnum\y=19\ifnum\x>25\BlockMatrix{TestMatrix}(\x/\y)\fi\fi
+        \ifnum\y=25\ifnum\x>15\ifnum\x<60\BlockMatrix{TestMatrix}(\x/\y)\fi\fi\fi
+        \ifnum\y=29\ifnum\x>25\BlockMatrix{TestMatrix}(\x/\y)\fi\fi
+    }
+}
+The Matrix:\\
+\MatrixForY{TestMatrix}{\MatrixForX{TestMatrix}{%
+    \IfMatrixBlocked{TestMatrix}(\CurMatrixX/\CurMatrixY){A}{\textcolor{gray}{X}}%
+}\\}%
+\GetShortestPath(2/0)->(63/43)[65x44]{CheckBlock}{Result}%
+{\tiny Erhalte\ForQueue{Result}{ > #1}.}
 \end{document}
