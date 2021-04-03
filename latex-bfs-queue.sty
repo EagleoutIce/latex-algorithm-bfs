@@ -2,7 +2,7 @@
 \RequirePackage{etoolbox}
 \def\CreateQueue#1{%
 \ifcsname lbq@ds@queue@#1\endcsname
-    \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
+    \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}{}\fi
 \expandafter\def\csname lbq@ds@queue@#1\endcsname{}%
 \expandafter\let\csname @@lbq@ds@queue@#1\endcsname\z@
 }

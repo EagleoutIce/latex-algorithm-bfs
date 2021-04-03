@@ -1,20 +1,14 @@
 \ProvidesPackage{latex-bfs}[2021/03/27 v1.0 implementation of an bfs algorithm]
-
 \newif\ifltxbfs@do@debug@
 \DeclareOption{debug}{\ltxbfs@do@debug@true}
 \DeclareOption{nodebug}{\ltxbfs@do@debug@false}
 \ProcessOptions*
-
 \RequirePackage{latex-bfs-queue,latex-bfs-matrix}
-
-\ifltxbfs@do@debug@
-\RequirePackage{xcolor}
-\fi
 
 % Note: The implementation does not allow diagonal movement
 \newcount\c@ltxbfs@qu@pointref
 \newcount\c@ltxbfs@qu@pointref@start
-\CreateMatrix{ltxbfs@bm}{0}{0}
+\CreateMatrix{ltxbfs@bm}\z@\z@
 \CreateQueue{ltxbfs@qu}
 
 \def\@ltxbfs@debug@void@state#1#2#3#4{}
@@ -29,6 +23,7 @@
 }}}}\\}}
 
 \ifltxbfs@do@debug@
+\RequirePackage{xcolor}
 \let\@ltxbfs@debug@state\@ltxbfs@debug@@state
 \else\let\@ltxbfs@debug@state\@ltxbfs@debug@void@state\fi
 
@@ -37,7 +32,6 @@
 \advance\c@ltxbfs@qu@pointref\@ne
 \advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
-\Enqueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}{}%
 \eEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
 }}
 
@@ -52,7 +46,7 @@
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
-\def\ltxbfs@ifblocked{\csname #5\endcsname}%
+\expandafter\let\expandafter\ltxbfs@ifblocked\csname #5\endcsname
 \@ltxbfs@debug@state{#1}{#2}{Initialization}{}%
 \ltxbfs@setup@startstates{#1}%
 \ltxbfs@bfs(#2)%

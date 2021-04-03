@@ -6,7 +6,7 @@
 % name | width | height
 \def\CreateMatrix#1#2#3{%
 \ifcsname lbfsma@ds@matrix@#1@w\endcsname
-\PackageError{The Matrix '#1' does already exist.}\fi
+\PackageError{latex-bfs-matrix}{The Matrix '#1' does already exist.}{}\fi
 \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
 \expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
 }
