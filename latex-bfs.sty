@@ -32,7 +32,7 @@
 \advance\c@ltxbfs@qu@pointref\@ne
 \advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
-\eEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
+\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
 }}
 
 % every point will be assigned an incrementing counter
@@ -52,7 +52,7 @@
 \ltxbfs@bfs{#2}%
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
-\eEnqueue{#6}{\@goalx/\@goaly}%
+\erawEnqueue{#6}{\@goalx/\@goaly}%
 \@ltxbfs@debug@state{#1}{#2}{Final State}{ltxbfs@pointq@\@goalp}%
 \else\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
@@ -89,7 +89,7 @@
 \def\ExtendToPointPath#1#2{%
 \DeclareQueue{ltxbfs@pointq@#1}%
 \ifnum#2>\c@ltxbfs@qu@pointref@start\relax \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
-\eEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
+\erawEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
 }
 
 \def\ltxbfs@bfs@trydir#1#2{%
@@ -99,7 +99,7 @@
 \BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
 \ExtendToPointPath{\number\c@ltxbfs@qu@pointref}{\@curp}%
-\eEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref}%
+\erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref}%
 }{}}
 
 % TODO: order by current direction by saving (/w enqueue) it for point?

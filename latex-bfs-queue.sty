@@ -17,19 +17,22 @@
 \def\GetQueue#1{\csname lbq@ds@queue@#1\endcsname}
 \def\GetQueueSize#1{\csname @@lbq@ds@queue@#1\endcsname}
 
-\def\Enqueue#1#2{
+\def\Enqueue#1#2{\rawEnqueue{#1}{{#2}}}
+
+\def\rawEnqueue#1#2{
 \expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+\@ne}
 \ifnum\csname @@lbq@ds@queue@#1\endcsname=\p@\relax
-\expandafter\def\csname lbq@ds@queue@#1\endcsname{{#2}}\else
-\csappto{lbq@ds@queue@#1}{,{#2}}\fi
+\expandafter\def\csname lbq@ds@queue@#1\endcsname{#2}\else
+\csappto{lbq@ds@queue@#1}{,#2}\fi
 }
 
-% TODO: raw mode which does not enter unnec groups?
-\def\eEnqueue#1#2{%
+\def\eEnqueue#1#2{\erawEnqueue{#1}{{#2}}}
+
+\def\erawEnqueue#1#2{%
 \expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+\@ne}
 \ifnum\csname @@lbq@ds@queue@#1\endcsname=\@ne\relax
-\expandafter\protected@edef\csname lbq@ds@queue@#1\endcsname{{#2}}\else
-\protected@cseappto{lbq@ds@queue@#1}{,{#2}}\fi
+\expandafter\protected@edef\csname lbq@ds@queue@#1\endcsname{#2}\else
+\protected@cseappto{lbq@ds@queue@#1}{,#2}\fi
 }
 
 \long\def\lbq@@dq#1#2,#3\@nil{%
