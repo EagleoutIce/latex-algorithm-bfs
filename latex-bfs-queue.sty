@@ -51,7 +51,7 @@
 }
 
 \def\lbfsqu@dq@normal#1{%
-\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname-\@ne\relax}
+\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname-\@ne}
 \protected@edef\@tmp{\noexpand\lbfsqu@@dq{\unexpanded{#1}}\csname lbfsqu@ds@queue@#1\endcsname\noexpand\@nil}%
 \@tmp
 }

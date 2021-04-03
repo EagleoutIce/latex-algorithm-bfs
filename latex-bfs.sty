@@ -22,12 +22,8 @@
 % (#1) starts; (#2) ends; #3 comment; #4 queue to highlight
 \def\@ltxbfs@debug@@state#1#2#3#4{%
 #3\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
-\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{%
-    \textcolor{purple}{>}%
-}{%
-\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{%
-    \textcolor{purple}{<}%
-}{%
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{{\color{purple}>}}{%
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{{\color{purple}<}}{%
 \IfInQueue{#4}{\CurMatrixX/\CurMatrixY}{\textcolor{teal}{X}}{%
 \ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{\textcolor{gray}{-}}%
 }}}}\\}}
@@ -56,15 +52,14 @@
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
-\def\ltxbfs@ifblocked{\@nameuse{#5}}%
+\def\ltxbfs@ifblocked{\csname #5\endcsname}%
 \@ltxbfs@debug@state{#1}{#2}{Initialization}{}%
 \ltxbfs@setup@startstates{#1}%
 \ltxbfs@bfs(#2)%
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
 \@ltxbfs@debug@state{#1}{#2}{Final State}{ltxbfs@pointq@\@goalp}%
-\else
-\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
+\else\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
 
 \def\ltxbfs@@ldpt#1/#2;#3\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}}
@@ -79,7 +74,7 @@
     \edef\@goalx{\@curx}\edef\@goaly{\@cury}\edef\@goalp{\@curp}%
     \@ltxbfs@foundgoal@true\let\iterate\relax
 }{\ltxbfs@bfs@nexts}%
-\ifnum\GetQueueSize{ltxbfs@qu}>0
+\ifnum\GetQueueSize{ltxbfs@qu}>\z@
 \repeat
 }
 
@@ -88,13 +83,12 @@
 \ifnum#1<0 #4\else\ifnum#2<0 #4\else% < 0
 \ifnum#1<\GetMatrixWidth{ltxbfs@bm}%
     \ifnum#2<\GetMatrixHeight{ltxbfs@bm}% is in field
-        \ltxbfs@ifblocked(#1/#2){#4}{%
-            \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
-        }%
+    \ltxbfs@ifblocked(#1/#2){#4}{%
+        \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
+    }%
     \else#4\fi
 \else#4\fi
-\fi\fi
-}
+\fi\fi}
 
 % queue to add | queue as source
 \def\ExtendToPointPath#1#2{%
