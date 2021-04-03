@@ -52,6 +52,7 @@
 \ltxbfs@bfs{#2}%
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
+\eEnqueue{#6}{\@goalx/\@goaly}%
 \@ltxbfs@debug@state{#1}{#2}{Final State}{ltxbfs@pointq@\@goalp}%
 \else\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
