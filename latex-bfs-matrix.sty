@@ -25,19 +25,19 @@
 
 \def\ResetMatrix#1{%
 \MatrixForY{#1}{\MatrixForX{#1}{%
-    \ifcsname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
-    \expandafter\undef\csname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
-    \fi
+\ifcsname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
+\expandafter\let\csname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname\lbfsma@undefined
+\fi
 }}}
 
-\newcommand\MatrixForX[3][0]{%
+\newcommand\MatrixForX[3][\z@]{%
 \c@lbfsma@m@x#1\relax
-\@whilenum\c@lbfsma@m@x<\csname lbfsma@ds@matrix@#2@w\endcsname\do{\relax#3\advance\c@lbfsma@m@x\@ne}%
+\@whilenum\c@lbfsma@m@x<\csname lbfsma@ds@matrix@#2@w\endcsname\do{#3\advance\c@lbfsma@m@x\@ne}%
 }
 
-\newcommand\MatrixForY[3][0]{%
+\newcommand\MatrixForY[3][\z@]{%
 \c@lbfsma@m@y#1\relax
-\@whilenum\c@lbfsma@m@y<\csname lbfsma@ds@matrix@#2@h\endcsname\do{\relax#3\advance\c@lbfsma@m@y\@ne}%
+\@whilenum\c@lbfsma@m@y<\csname lbfsma@ds@matrix@#2@h\endcsname\do{#3\advance\c@lbfsma@m@y\@ne}%
 }
 
 % BitMap-Specific
@@ -45,9 +45,7 @@
 \def\BlockMatrix#1(#2/#3){\expandafter\let\csname lbfsma@ds@matrix@#1@#2@#3\endcsname\lbfsma@m@@blocked}
 
 \def\IfMatrixBlocked#1(#2/#3)#4#5{\ifcsname lbfsma@ds@matrix@#1@#2@#3\endcsname#4\else#5\fi}
-\def\lbfsma@ifpoint(#1/#2)=(#3/#4)#5#6{%
-    \ifnum#1=#3\relax\ifnum#2=#4\relax#5\else#6\fi\else#6\fi
-}
+\def\lbfsma@ifpoint(#1/#2)=(#3/#4)#5#6{\ifnum#1=#3\relax\ifnum#2=#4\relax#5\else#6\fi\else#6\fi}
 
 \newif\if@lbfsma@inq@
 \def\lbfsma@ifpointinqueue(#1/#2) in #3#4#5{%

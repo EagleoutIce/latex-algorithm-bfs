@@ -1,6 +1,5 @@
 \ProvidesPackage{latex-bfs-queue}[2021/03/27 v1.0 Implementation of a queue data structure]
 \RequirePackage{etoolbox}
-
 \def\CreateQueue#1{%
 \ifcsname lbq@ds@queue@#1\endcsname
     \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
@@ -10,13 +9,10 @@
 
 \def\DeclareQueue#1{%
 \ifcsname lbq@ds@queue@#1\endcsname\ResetQueue{#1}\else
-\CreateQueue{#1}\fi
-}
-
+\CreateQueue{#1}\fi}
 \def\ResetQueue#1{%
 \expandafter\def\csname lbq@ds@queue@#1\endcsname{}%
-\expandafter\let\csname @@lbq@ds@queue@#1\endcsname\z@
-}
+\expandafter\let\csname @@lbq@ds@queue@#1\endcsname\z@}
 
 \def\GetQueue#1{\csname lbq@ds@queue@#1\endcsname}
 \def\GetQueueSize#1{\csname @@lbq@ds@queue@#1\endcsname}
@@ -62,16 +58,14 @@
 
 \def\GlobalQueue#1{%
 \expandafter\xdef\csname lbq@ds@queue@#1\endcsname{\csexpandonce{lbq@ds@queue@#1}}%
-\expandafter\xdef\csname @@lbq@ds@queue@#1\endcsname{\csname @@lbq@ds@queue@#1\endcsname}
-}
+\expandafter\xdef\csname @@lbq@ds@queue@#1\endcsname{\csname @@lbq@ds@queue@#1\endcsname}}
 
 \newif\if@lbq@inq@
 % if #2 in #1 do #3; else #4
 \def\IfInQueue#1#2#3#4{\@lbq@inq@false
 \protected@edef\@search{#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbq@inq@true\listbreak}{}}%
 \expandafter\expandafter\expandafter\docsvlist\expandafter\expandafter\expandafter{\csname lbq@ds@queue@#1\endcsname}%
-\if@lbq@inq@#3\else#4\fi
-}
+\if@lbq@inq@#3\else#4\fi}
 
 \def\AppendQueue#1#2{%
 \ifnum\csname @@lbq@ds@queue@#1\endcsname=\z@\relax \expandafter\protected@edef\csname lbq@ds@queue@#1\endcsname{\csname lbq@ds@queue@#2\endcsname}\else
