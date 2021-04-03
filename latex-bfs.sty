@@ -12,8 +12,8 @@
 \fi
 
 % Note: The implementation does not allow diagonal movement
-\newcounter{ltxbfs@qu@pointref}
-\newcounter{ltxbfs@qu@pointref@start}
+\newcount\c@ltxbfs@qu@pointref
+\newcount\c@ltxbfs@qu@pointref@start
 \CreateMatrix{ltxbfs@bm}{0}{0}
 \CreateQueue{ltxbfs@qu}
 
@@ -51,8 +51,8 @@
 % multiple starts and ends
 % (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
 \def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
-\c@ltxbfs@qu@pointref0\relax
-\c@ltxbfs@qu@pointref@start0\relax
+\c@ltxbfs@qu@pointref\z@
+\c@ltxbfs@qu@pointref@start\z@
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
@@ -84,7 +84,7 @@
 }
 
 % will check if in bound of bitmap matrix and if not blocked
-\def\ltxbfs@isvalidtarget(#1/#2)#3#4{%
+\def\ltxbfs@isvalidtarget#1#2#3#4{%
 \ifnum#1<0 #4\else\ifnum#2<0 #4\else% < 0
 \ifnum#1<\GetMatrixWidth{ltxbfs@bm}%
     \ifnum#2<\GetMatrixHeight{ltxbfs@bm}% is in field
@@ -103,9 +103,9 @@
 \eEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
 }
 
-\def\ltxbfs@bfs@trydir(#1/#2){%
+\def\ltxbfs@bfs@trydir#1#2{%
 \edef\@tx{#1}\edef\@ty{#2}%
-\ltxbfs@isvalidtarget(\@tx/\@ty){%
+\ltxbfs@isvalidtarget\@tx\@ty{%
 %\typeout{Adding: (\@tx/\@ty)}
 \BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
@@ -116,9 +116,9 @@
 % TODO: order by current direction by saving (/w enqueue) it for point?
 \def\ltxbfs@bfs@nexts{%
 % add further points
-\ltxbfs@bfs@trydir(\@curx/\the\numexpr\@cury+1\relax)% up
-\ltxbfs@bfs@trydir(\@curx/\the\numexpr\@cury-1\relax)% down
-\ltxbfs@bfs@trydir(\the\numexpr\@curx+1\relax/\@cury)% left
-\ltxbfs@bfs@trydir(\the\numexpr\@curx-1\relax/\@cury)% right
+\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury+1\relax}% up
+\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury-1\relax}% down
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1\relax}{\@cury}% left
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1\relax}{\@cury}% right
 }
 \endinput
