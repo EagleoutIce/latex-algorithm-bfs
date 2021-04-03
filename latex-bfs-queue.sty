@@ -2,69 +2,67 @@
 \RequirePackage{etoolbox,xstring}
 
 \def\CreateQueue#1{%
-    \ifcsname c@lbfsqu@ds@queue@#1\endcsname
-        \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
-    \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
-    \expandafter\newcount\csname c@lbfsqu@ds@queue@#1\endcsname
-    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
+\ifcsname lbfsqu@ds@queue@#1\endcsname
+    \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
+\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
+\expandafter\let\csname @@lbfsqu@ds@queue@#1\endcsname\z@
 }
 
 \def\DeclareQueue#1{%
-    \ifcsname c@lbfsqu@ds@queue@#1\endcsname\ResetQueue{#1}\else
-    \CreateQueue{#1}\fi
+\ifcsname lbfsqu@ds@queue@#1\endcsname\ResetQueue{#1}\else
+\CreateQueue{#1}\fi
 }
 
 \def\ResetQueue#1{%
-    \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
-    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
+\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
+\expandafter\let\csname @@lbfsqu@ds@queue@#1\endcsname\z@
 }
 
 \def\GetQueue#1{\csname lbfsqu@ds@queue@#1\endcsname}
-\def\GetQueueSize#1{\arabic{lbfsqu@ds@queue@#1}}
+\def\GetQueueSize#1{\csname @@lbfsqu@ds@queue@#1\endcsname}
 
 \def\Enqueue#1#2{
-    \expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\@ne
-    \ifnum\value{lbfsqu@ds@queue@#1}=1\relax
-    \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{{#2}}\else
-    \csappto{lbfsqu@ds@queue@#1}{,{#2}}\fi
+\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname+\@ne}
+\ifnum\csname @@lbfsqu@ds@queue@#1\endcsname=\p@\relax
+\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{{#2}}\else
+\csappto{lbfsqu@ds@queue@#1}{,{#2}}\fi
 }
 
 % TODO: raw mode which does not enter unnec groups?
 \def\eEnqueue#1#2{%
-    \expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\@ne
-    \ifnum\value{lbfsqu@ds@queue@#1}=1\relax
-    \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{{#2}}\else
-    \protected@cseappto{lbfsqu@ds@queue@#1}{,{#2}}\fi
+\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname+\@ne}
+\ifnum\csname @@lbfsqu@ds@queue@#1\endcsname=\@ne\relax
+\expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{{#2}}\else
+\protected@cseappto{lbfsqu@ds@queue@#1}{,{#2}}\fi
 }
 
 \long\def\lbfsqu@@dq#1#2,#3\@nil{%
-    \protected@edef\dequeued{#2}%
-    \ifnum\value{lbfsqu@ds@queue@#1}=1\relax% fix unpack on last pack
-    \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{{#3}}%
-    \else\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{#3}%
-    \fi
+\protected@edef\dequeued{#2}%
+\ifnum\csname @@lbfsqu@ds@queue@#1\endcsname=\@ne\relax% fix unpack on last pack
+\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{{#3}}%
+\else\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{#3}%
+\fi
 }
 
 \def\lbfsqu@dq@last#1{%
-    \protected@edef\dequeued{\csname lbfsqu@ds@queue@#1\endcsname}%
-    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
-    \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
+\protected@edef\dequeued{\csname lbfsqu@ds@queue@#1\endcsname}%
+\expandafter\let\csname @@lbfsqu@ds@queue@#1\endcsname\z@
+\expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
 }
 
 \def\lbfsqu@dq@normal#1{%
-    \expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname-1\relax
-    \protected@edef\@tmp{\noexpand\lbfsqu@@dq{\unexpanded{#1}}\csname lbfsqu@ds@queue@#1\endcsname\noexpand\@nil}%
-    \@tmp
+\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname-\@ne\relax}
+\protected@edef\@tmp{\noexpand\lbfsqu@@dq{\unexpanded{#1}}\csname lbfsqu@ds@queue@#1\endcsname\noexpand\@nil}%
+\@tmp
 }
 
 \def\Dequeue#1{%
-\ifnum\value{lbfsqu@ds@queue@#1}<2\relax
-\lbfsqu@dq@last{#1}\else\lbfsqu@dq@normal{#1}\fi
+\ifnum\csname @@lbfsqu@ds@queue@#1\endcsname<2 \lbfsqu@dq@last{#1}\else\lbfsqu@dq@normal{#1}\fi
 }
 
 \def\GlobalQueue#1{%
-    \expandafter\xdef\csname lbfsqu@ds@queue@#1\endcsname{\csexpandonce{lbfsqu@ds@queue@#1}}%
-    \setcounter{lbfsqu@ds@queue@#1}{\value{lbfsqu@ds@queue@#1}}%
+\expandafter\xdef\csname lbfsqu@ds@queue@#1\endcsname{\csexpandonce{lbfsqu@ds@queue@#1}}%
+\expandafter\xdef\csname @@lbfsqu@ds@queue@#1\endcsname{\csname @@lbfsqu@ds@queue@#1\endcsname}
 }
 
 \newif\if@lbfsqu@inq@
@@ -76,8 +74,8 @@
 }
 
 \def\AppendQueue#1#2{%
-\ifnum\value{lbfsqu@ds@queue@#1}=\z@\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\csname lbfsqu@ds@queue@#2\endcsname}\else
+\ifnum\csname @@lbfsqu@ds@queue@#1\endcsname=\z@\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\csname lbfsqu@ds@queue@#2\endcsname}\else
 \protected@cseappto{lbfsqu@ds@queue@#1}{,\csname lbfsqu@ds@queue@#2\endcsname}\fi
-\expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\value{lbfsqu@ds@queue@#2}%
+\expandafter\edef\csname @@lbfsqu@ds@queue@#1\endcsname{\the\numexpr\csname @@lbfsqu@ds@queue@#1\endcsname+\csname @@lbfsqu@ds@queue@#2\endcsname}%
 }
 \endinput
