@@ -68,7 +68,7 @@
 \newif\if@lbfsqu@inq@
 % if #2 in #1 do #3; else #4
 \def\IfInQueue#1#2#3#4{\@lbfsqu@inq@false
-\edef\@search{#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbfsqu@inq@true\listbreak}{}}%
+\protected@edef\@search{#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbfsqu@inq@true\listbreak}{}}%
 \edef\@tmp{\noexpand\docsvlist{\csexpandonce{lbfsqu@ds@queue@#1}}}\@tmp
 \if@lbfsqu@inq@#3\else#4\fi
 }
