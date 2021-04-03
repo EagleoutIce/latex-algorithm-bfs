@@ -5,7 +5,8 @@
     \ifcsname c@lbfsqu@ds@queue@#1\endcsname
         \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}\fi
     \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
-    \newcounter{lbfsqu@ds@queue@#1}%
+    \expandafter\newcount\csname c@lbfsqu@ds@queue@#1\endcsname
+    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
 }
 
 \def\DeclareQueue#1{%
@@ -15,7 +16,7 @@
 
 \def\ResetQueue#1{%
     \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
-    \csname c@lbfsqu@ds@queue@#1\endcsname0%
+    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
 }
 
 \def\GetQueue#1{\csname lbfsqu@ds@queue@#1\endcsname}
@@ -46,7 +47,7 @@
 
 \def\lbfsqu@dq@last#1{%
     \protected@edef\dequeued{\csname lbfsqu@ds@queue@#1\endcsname}%
-    \csname c@lbfsqu@ds@queue@#1\endcsname0%
+    \csname c@lbfsqu@ds@queue@#1\endcsname\z@
     \expandafter\def\csname lbfsqu@ds@queue@#1\endcsname{}%
 }
 
@@ -75,7 +76,7 @@
 }
 
 \def\AppendQueue#1#2{%
-\ifnum\value{lbfsqu@ds@queue@#1}=0\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\csname lbfsqu@ds@queue@#2\endcsname}\else
+\ifnum\value{lbfsqu@ds@queue@#1}=\z@\relax \expandafter\protected@edef\csname lbfsqu@ds@queue@#1\endcsname{\csname lbfsqu@ds@queue@#2\endcsname}\else
 \protected@cseappto{lbfsqu@ds@queue@#1}{,\csname lbfsqu@ds@queue@#2\endcsname}\fi
 \expandafter\advance\csname c@lbfsqu@ds@queue@#1\endcsname\value{lbfsqu@ds@queue@#2}%
 }
