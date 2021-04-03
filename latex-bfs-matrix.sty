@@ -54,7 +54,7 @@
 \newif\if@lbfsma@inq@
 \def\lbfsma@ifpointinqueue(#1/#2) in #3#4#5{%
 \@lbfsma@inq@false
-\def\do##1{\IfStrEq{##1}{#1/#2}{\@lbfsma@inq@true\listbreak}{}}%
+\edef\@search{#1/#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbfsma@inq@true\listbreak}{}}%
 \edef\@tmp{\noexpand\docsvlist{#3}}\@tmp
 \if@lbfsma@inq@#4\else#5\fi
 }
