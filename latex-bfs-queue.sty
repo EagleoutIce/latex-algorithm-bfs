@@ -3,7 +3,7 @@
 \def\CreateQueue#1{%
 \ifcsname lbq@ds@queue@#1\endcsname
     \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}{}\fi
-\expandafter\def\csname lbq@ds@queue@#1\endcsname{}%
+\expandafter\let\csname lbq@ds@queue@#1\endcsname\@empty
 \expandafter\let\csname @@lbq@ds@queue@#1\endcsname\z@
 }
 
@@ -19,9 +19,9 @@
 
 \def\Enqueue#1#2{\rawEnqueue{#1}{{#2}}}
 
-\def\rawEnqueue#1#2{
-\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+\@ne}
-\ifnum\csname @@lbq@ds@queue@#1\endcsname=\p@\relax
+\def\rawEnqueue#1#2{%
+\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+1}
+\ifnum\csname @@lbq@ds@queue@#1\endcsname=1 %
 \expandafter\def\csname lbq@ds@queue@#1\endcsname{#2}\else
 \csappto{lbq@ds@queue@#1}{,#2}\fi
 }
@@ -29,35 +29,30 @@
 \def\eEnqueue#1#2{\erawEnqueue{#1}{{#2}}}
 
 \def\erawEnqueue#1#2{%
-\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+\@ne}
-\ifnum\csname @@lbq@ds@queue@#1\endcsname=\@ne\relax
+\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname+1}
+\ifnum\csname @@lbq@ds@queue@#1\endcsname=1 %
 \expandafter\protected@edef\csname lbq@ds@queue@#1\endcsname{#2}\else
-\protected@cseappto{lbq@ds@queue@#1}{,#2}\fi
-}
+\protected@cseappto{lbq@ds@queue@#1}{,#2}\fi}
 
 \long\def\lbq@@dq#1#2,#3\@nil{%
 \protected@edef\dequeued{#2}%
-\ifnum\csname @@lbq@ds@queue@#1\endcsname=\@ne\relax% fix unpack on last pack
+\ifnum\csname @@lbq@ds@queue@#1\endcsname=1 % fix unpack on last pack
 \expandafter\def\csname lbq@ds@queue@#1\endcsname{{#3}}%
 \else\expandafter\def\csname lbq@ds@queue@#1\endcsname{#3}%
-\fi
-}
+\fi}
 
 \def\lbq@dq@last#1{%
 \protected@edef\dequeued{\csname lbq@ds@queue@#1\endcsname}%
 \expandafter\let\csname @@lbq@ds@queue@#1\endcsname\z@
-\expandafter\def\csname lbq@ds@queue@#1\endcsname{}%
-}
+\expandafter\let\csname lbq@ds@queue@#1\endcsname\@empty}
 
 \def\lbq@dq@normal#1{%
-\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname-\@ne}
+\expandafter\edef\csname @@lbq@ds@queue@#1\endcsname{\the\numexpr\csname @@lbq@ds@queue@#1\endcsname-1}
 \protected@edef\@tmp{\noexpand\lbq@@dq{\unexpanded{#1}}\csname lbq@ds@queue@#1\endcsname\noexpand\@nil}%
-\@tmp
-}
+\@tmp}
 
 \def\Dequeue#1{%
-\ifnum\csname @@lbq@ds@queue@#1\endcsname<2 \lbq@dq@last{#1}\else\lbq@dq@normal{#1}\fi
-}
+\ifnum\csname @@lbq@ds@queue@#1\endcsname<2 \lbq@dq@last{#1}\else\lbq@dq@normal{#1}\fi}
 
 \def\GlobalQueue#1{%
 \expandafter\xdef\csname lbq@ds@queue@#1\endcsname{\csexpandonce{lbq@ds@queue@#1}}%

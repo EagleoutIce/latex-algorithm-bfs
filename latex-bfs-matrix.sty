@@ -8,14 +8,12 @@
 \ifcsname lbfsma@ds@matrix@#1@w\endcsname
 \PackageError{latex-bfs-matrix}{The Matrix '#1' does already exist.}{}\fi
 \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
-\expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
-}
+\expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}}
 
 \def\UpdateMatrix#1#2#3{%
 \expandafter\edef\csname lbfsma@ds@matrix@#1@w\endcsname{#2}%
 \expandafter\edef\csname lbfsma@ds@matrix@#1@h\endcsname{#3}%
-\ResetMatrix{#1}%
-}
+\ResetMatrix{#1}}
 
 \def\GetMatrixWidth#1{\csname lbfsma@ds@matrix@#1@w\endcsname}
 \def\GetMatrixHeight#1{\csname lbfsma@ds@matrix@#1@h\endcsname}
@@ -27,18 +25,15 @@
 \MatrixForY{#1}{\MatrixForX{#1}{%
 \ifcsname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname
 \expandafter\let\csname lbfsma@ds@matrix@#1@\number\c@lbfsma@m@x @\number\c@lbfsma@m@y\endcsname\lbfsma@undefined
-\fi
-}}}
+\fi}}}
 
 \newcommand\MatrixForX[3][\z@]{%
 \c@lbfsma@m@x#1\relax
-\@whilenum\c@lbfsma@m@x<\csname lbfsma@ds@matrix@#2@w\endcsname\do{#3\advance\c@lbfsma@m@x\@ne}%
-}
+\@whilenum\c@lbfsma@m@x<\csname lbfsma@ds@matrix@#2@w\endcsname\do{#3\advance\c@lbfsma@m@x\@ne}}
 
 \newcommand\MatrixForY[3][\z@]{%
 \c@lbfsma@m@y#1\relax
-\@whilenum\c@lbfsma@m@y<\csname lbfsma@ds@matrix@#2@h\endcsname\do{#3\advance\c@lbfsma@m@y\@ne}%
-}
+\@whilenum\c@lbfsma@m@y<\csname lbfsma@ds@matrix@#2@h\endcsname\do{#3\advance\c@lbfsma@m@y\@ne}}
 
 % BitMap-Specific
 \def\lbfsma@m@@blocked{1}
@@ -52,7 +47,5 @@
 \@lbfsma@inq@false
 \protected@edef\@search{#1/#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbfsma@inq@true\listbreak}{}}%
 \expandafter\expandafter\expandafter\docsvlist\expandafter\expandafter\expandafter{#3}%
-\if@lbfsma@inq@#4\else#5\fi
-}
-
+\if@lbfsma@inq@#4\else#5\fi}
 \endinput

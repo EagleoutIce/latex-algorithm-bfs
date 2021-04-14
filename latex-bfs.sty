@@ -19,7 +19,7 @@
 \lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{{\color{purple}>}}{%
 \lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{{\color{purple}<}}{%
 \IfInQueue{#4}{\CurMatrixX/\CurMatrixY}{\textcolor{teal}{X}}{%
-\ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{\textcolor{gray}{-}}%
+\ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{{\color{gray}-}}%
 }}}}\\}}
 
 \ifltxbfs@do@debug@
@@ -69,9 +69,7 @@
     \edef\@goalx{\@curx}\edef\@goaly{\@cury}\edef\@goalp{\@curp}%
     \@ltxbfs@foundgoal@true\let\iterate\relax
 }{\ltxbfs@bfs@nexts}%
-\ifnum\GetQueueSize{ltxbfs@qu}>\z@
-\repeat
-}
+\ifnum\GetQueueSize{ltxbfs@qu}>0 \repeat}
 
 % will check if in bound of bitmap matrix and if not blocked
 \def\ltxbfs@isvalidtarget#1#2#3#4{%
