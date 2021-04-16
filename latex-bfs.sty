@@ -1,13 +1,10 @@
 \ProvidesPackage{latex-bfs}[2021/03/27 v1.0 implementation of an bfs algorithm]
 \newif\ifltxbfs@do@debug@
-\DeclareOption{debug}{\ltxbfs@do@debug@true}
-\DeclareOption{nodebug}{\ltxbfs@do@debug@false}
+\DeclareOption{debug}{\ltxbfs@do@debug@true}\DeclareOption{nodebug}{\ltxbfs@do@debug@false}
 \ProcessOptions*
 \RequirePackage{latex-bfs-queue,latex-bfs-matrix}
-
 % Note: The implementation does not allow diagonal movement
-\newcount\c@ltxbfs@qu@pointref
-\newcount\c@ltxbfs@qu@pointref@start
+\newcount\c@ltxbfs@qu@pointref \newcount\c@ltxbfs@qu@pointref@start
 \CreateMatrix{ltxbfs@bm}\z@\z@
 \CreateQueue{ltxbfs@qu}
 
@@ -16,11 +13,11 @@
 % (#1) starts; (#2) ends; #3 comment; #4 queue to highlight
 \def\@ltxbfs@debug@@state#1#2#3#4{%
 #3\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
-\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{{\color{purple}>}}{%
-\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{{\color{purple}<}}{%
-\IfInQueue{#4}{\CurMatrixX/\CurMatrixY}{\textcolor{teal}{X}}{%
-\ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{{\color{gray}-}}%
-}}}}\\}}
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#1}{{\@declaredcolor{purple}>}}{%
+\lbfsma@ifpointinqueue(\CurMatrixX/\CurMatrixY) in {#2}{{\@declaredcolor{purple}<}}{%
+\IfInQueue{#4}{\CurMatrixX/\CurMatrixY}{{\@declaredcolor{teal}X}}{%
+\ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{{\@declaredcolor{gray}-}}%
+}}}}\newline}}
 
 \ifltxbfs@do@debug@
 \RequirePackage{xcolor}
