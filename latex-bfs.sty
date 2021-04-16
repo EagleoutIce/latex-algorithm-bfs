@@ -29,7 +29,7 @@
 \advance\c@ltxbfs@qu@pointref\@ne
 \advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
-\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref;\z@}%
+\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref;0}%
 }}
 
 % every point will be assigned an incrementing counter
@@ -95,12 +95,28 @@
 \erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref;#3}%
 }\relax}
 
-% TODO: order by current direction by saving (/w enqueue) it for point?
-\def\ltxbfs@bfs@nexts{%
-% add further points
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}\z@% up
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}\@ne% down
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury\tw@% left
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury\thr@@% right
+% TODO: this should be written in a more compact form
+\def\ltxbfs@bfs@nexts{% add further points
+\ifcase\@curd
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
+\or% 1 last
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
+\or% 2 last
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
+\or% 3 last
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
+\fi
 }
 \endinput
