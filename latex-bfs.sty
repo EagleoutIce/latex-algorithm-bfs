@@ -5,11 +5,9 @@
 \RequirePackage{latex-bfs-queue,latex-bfs-matrix}
 % Note: The implementation does not allow diagonal movement
 \newcount\c@ltxbfs@qu@pointref \newcount\c@ltxbfs@qu@pointref@start
-\CreateMatrix{ltxbfs@bm}\z@\z@
-\CreateQueue{ltxbfs@qu}
+\CreateMatrix{ltxbfs@bm}\z@\z@ \CreateQueue{ltxbfs@qu}
 
-\def\@ltxbfs@debug@void@state#1#2#3#4{}
-% Debug the current State
+\def\@ltxbfs@debug@void@state#1#2#3#4{}% Debug current State
 % (#1) starts; (#2) ends; #3 comment; #4 queue to highlight
 \def\@ltxbfs@debug@@state#1#2#3#4{%
 #3\par\noindent\MatrixForY{ltxbfs@bm}{\MatrixForX{ltxbfs@bm}{%
@@ -19,8 +17,7 @@
 \ltxbfs@ifblocked(\CurMatrixX/\CurMatrixY){\#}{{\@declaredcolor{gray}-}}%
 }}}}\newline}}
 
-\ifltxbfs@do@debug@
-\RequirePackage{xcolor}
+\ifltxbfs@do@debug@\RequirePackage{xcolor}
 \let\@ltxbfs@debug@state\@ltxbfs@debug@@state
 \else\let\@ltxbfs@debug@state\@ltxbfs@debug@void@state\fi
 
@@ -29,8 +26,7 @@
 \advance\c@ltxbfs@qu@pointref\@ne
 \advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
-\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref;0}%
-}}
+\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref;0}}}
 
 % every point will be assigned an incrementing counter
 % which will be linked to it's queue
@@ -55,7 +51,6 @@
 
 \def\ltxbfs@@ldpt#1/#2;#3;#4\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}\def\@curd{#4}}
 \def\ltxbfs@ldpt#1\@nil{\expandafter\ltxbfs@@ldpt#1\@nil}
-% end
 \def\ltxbfs@bfs#1{%
 \loop
 % Pick point from the queue
@@ -71,20 +66,17 @@
 \def\ltxbfs@isvalidtarget#1#2#3#4{%
 \ifnum#1<0 #4\else\ifnum#2<0 #4\else% < 0
 \ifnum#1<\GetMatrixWidth{ltxbfs@bm}%
-    \ifnum#2<\GetMatrixHeight{ltxbfs@bm}% is in field
-    \ltxbfs@ifblocked(#1/#2){#4}{%
-        \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
-    }%
-    \else#4\fi
-\else#4\fi
-\fi\fi}
+\ifnum#2<\GetMatrixHeight{ltxbfs@bm}% is in field
+\ltxbfs@ifblocked(#1/#2){#4}{%
+    \IfMatrixBlocked{ltxbfs@bm}(#1/#2){#4}{#3}
+}%
+\else#4\fi\else#4\fi\fi\fi}
 
 % queue to add | queue as source
 \def\ExtendToPointPath#1#2{%
 \DeclareQueue{ltxbfs@pointq@#1}%
 \ifnum#2>\c@ltxbfs@qu@pointref@start\relax \AppendQueue{ltxbfs@pointq@#1}{ltxbfs@pointq@#2}\fi
-\erawEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
-}
+\erawEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}}
 
 \def\ltxbfs@bfs@trydir#1#2#3{%
 \edef\@tx{#1}\edef\@ty{#2}%
@@ -95,28 +87,14 @@
 \erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref;#3}%
 }\relax}
 
-% TODO: this should be written in a more compact form
 \def\ltxbfs@bfs@nexts{% add further points
-\ifcase\@curd
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
-\or% 1 last
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
-\or% 2 last
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
-\or% 3 last
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3% right
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2% left
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1% down
-\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0% up
+\ifcase\@curd\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0%
+\or\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1\or\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2%
+\or\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3%
 \fi
+\ifnum\@curd>0\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}0\fi% up
+\ifnum\@curd=1\else\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}1\fi% down
+\ifnum\@curd=2\else\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury2\fi% left
+\ifnum\@curd<3\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury3\fi% right
 }
 \endinput
