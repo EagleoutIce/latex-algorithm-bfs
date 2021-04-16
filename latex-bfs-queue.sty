@@ -4,7 +4,7 @@
 \ifcsname lbq@ds@q@#1\endcsname
     \PackageError{latex-bfs-queue}{The Queue '#1' does already exist.}{}\fi
 \expandafter\let\csname lbq@ds@q@#1\endcsname\@empty
-\expandafter\newcount\csname @@lbq@ds@q@#1\endcsname
+\expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@
 }
 
 \def\DeclareQueue#1{%
@@ -12,15 +12,15 @@
 \CreateQueue{#1}\fi}
 \def\ResetQueue#1{%
 \expandafter\def\csname lbq@ds@q@#1\endcsname{}%
-\csname @@lbq@ds@q@#1\endcsname0}
+\expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@}
 
 \def\GetQueue#1{\csname lbq@ds@q@#1\endcsname}
-\def\GetQueueSize#1{\number\csname @@lbq@ds@q@#1\endcsname}
+\def\GetQueueSize#1{\csname @@lbq@ds@q@#1\endcsname}
 
 \def\Enqueue#1#2{\rawEnqueue{#1}{{#2}}}
 
 \def\rawEnqueue#1#2{%
-\expandafter\advance\csname @@lbq@ds@q@#1\endcsname\@ne
+\expandafter\edef\csname @@lbq@ds@q@#1\endcsname{\the\numexpr\csname @@lbq@ds@q@#1\endcsname+1}
 \ifnum\csname @@lbq@ds@q@#1\endcsname=1 %
 \expandafter\def\csname lbq@ds@q@#1\endcsname{#2}\else
 \csappto{lbq@ds@q@#1}{,#2}\fi
@@ -29,7 +29,7 @@
 \def\eEnqueue#1#2{\erawEnqueue{#1}{{#2}}}
 
 \def\erawEnqueue#1#2{%
-\expandafter\advance\csname @@lbq@ds@q@#1\endcsname\@ne
+\expandafter\edef\csname @@lbq@ds@q@#1\endcsname{\the\numexpr\csname @@lbq@ds@q@#1\endcsname+1}
 \ifnum\csname @@lbq@ds@q@#1\endcsname=1 %
 \expandafter\protected@edef\csname lbq@ds@q@#1\endcsname{#2}\else
 \protected@cseappto{lbq@ds@q@#1}{,#2}\fi}
@@ -43,11 +43,11 @@
 
 \def\lbq@dq@last#1{%
 \protected@edef\dequeued{\csname lbq@ds@q@#1\endcsname}%
-\csname @@lbq@ds@q@#1\endcsname\z@
+\expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@
 \expandafter\let\csname lbq@ds@q@#1\endcsname\@empty}
 
 \def\lbq@dq@normal#1{%
-\expandafter\advance\csname @@lbq@ds@q@#1\endcsname\m@ne
+\expandafter\edef\csname @@lbq@ds@q@#1\endcsname{\the\numexpr\csname @@lbq@ds@q@#1\endcsname-1}
 \protected@edef\@tmp{\noexpand\lbq@@dq{\unexpanded{#1}}\csname lbq@ds@q@#1\endcsname\noexpand\@nil}%
 \@tmp}
 
@@ -56,7 +56,7 @@
 
 \def\GlobalQueue#1{%
 \expandafter\xdef\csname lbq@ds@q@#1\endcsname{\csexpandonce{lbq@ds@q@#1}}%
-\global\csname @@lbq@ds@q@#1\endcsname\csname @@lbq@ds@q@#1\endcsname\relax}
+\expandafter\xdef\csname @@lbq@ds@q@#1\endcsname{\csname @@lbq@ds@q@#1\endcsname}}
 
 \def\lbq@str#1#2{\begingroup\edef\@tmpa{\expandafter\detokenize\expandafter{#1}}\edef\@tmpb{\detokenize{#2}}\ifx\@tmpa\@tmpb\aftergroup\@firstoftwo\else\aftergroup\@secondoftwo\fi\endgroup}
 
@@ -73,6 +73,6 @@
 \def\AppendQueue#1#2{%
 \ifnum\csname @@lbq@ds@q@#1\endcsname=0 \expandafter\protected@edef\csname lbq@ds@q@#1\endcsname{\csname lbq@ds@q@#2\endcsname}\else
 \protected@cseappto{lbq@ds@q@#1}{,\csname lbq@ds@q@#2\endcsname}\fi
-\expandafter\advance\csname @@lbq@ds@q@#1\endcsname\csname @@lbq@ds@q@#2\endcsname
+\expandafter\edef\csname @@lbq@ds@q@#1\endcsname{\the\numexpr\csname @@lbq@ds@q@#1\endcsname+\csname @@lbq@ds@q@#2\endcsname}%
 }
 \endinput
