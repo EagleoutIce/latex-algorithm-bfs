@@ -103,9 +103,9 @@
 % TODO: order by current direction by saving (/w enqueue) it for point?
 \def\ltxbfs@bfs@nexts{%
 % add further points
-\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury+1\relax}% up
-\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury-1\relax}% down
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1\relax}{\@cury}% left
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1\relax}{\@cury}% right
+\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury+1}% up
+\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury-1}% down
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}{\@cury}% left
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}{\@cury}% right
 }
 \endinput
