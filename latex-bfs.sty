@@ -93,12 +93,11 @@
 \def\ltxbfs@bfs@trydir#1#2{%
 \edef\@tx{#1}\edef\@ty{#2}%
 \ltxbfs@isvalidtarget\@tx\@ty{%
-%\typeout{Adding: (\@tx/\@ty)}
 \BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
 \ExtendToPointPath{\number\c@ltxbfs@qu@pointref}{\@curp}%
 \erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref}%
-}{}}
+}\relax}
 
 % TODO: order by current direction by saving (/w enqueue) it for point?
 \def\ltxbfs@bfs@nexts{%

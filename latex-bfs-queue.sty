@@ -58,10 +58,12 @@
 \expandafter\xdef\csname lbq@ds@q@#1\endcsname{\csexpandonce{lbq@ds@q@#1}}%
 \expandafter\xdef\csname @@lbq@ds@q@#1\endcsname{\csname @@lbq@ds@q@#1\endcsname}}
 
+\def\lbq@str#1#2{\begingroup\edef\@tmpa{\expandafter\detokenize\expandafter{#1}}\edef\@tmpb{\detokenize{#2}}\ifx\@tmpa\@tmpb\aftergroup\@firstoftwo\else\aftergroup\@secondoftwo\fi\endgroup}
+
 \newif\if@lbq@inq@
 % if #2 in #1 do #3; else #4
 \def\IfInQueue#1#2#3#4{\@lbq@inq@false
-\protected@edef\@search{#2}\def\do##1{\ifdefstring{\@search}{##1}{\@lbq@inq@true\listbreak}{}}%
+\protected@edef\@search{#2}\def\do##1{\lbq@str\@search{##1}{\@lbq@inq@true\listbreak}{}}%
 \expandafter\expandafter\expandafter\docsvlist\expandafter\expandafter\expandafter{\csname lbq@ds@q@#1\endcsname}%
 \if@lbq@inq@#3\else#4\fi}
 
