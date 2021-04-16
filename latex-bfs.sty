@@ -29,7 +29,7 @@
 \advance\c@ltxbfs@qu@pointref\@ne
 \advance\c@ltxbfs@qu@pointref@start\@ne
 \DeclareQueue{ltxbfs@pointq@\number\c@ltxbfs@qu@pointref}%
-\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref}%
+\erawEnqueue{ltxbfs@qu}{\pnt;\number\c@ltxbfs@qu@pointref;\z@}%
 }}
 
 % every point will be assigned an incrementing counter
@@ -38,8 +38,7 @@
 % multiple starts and ends
 % (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
 \def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
-\c@ltxbfs@qu@pointref\z@
-\c@ltxbfs@qu@pointref@start\z@
+\c@ltxbfs@qu@pointref0 \c@ltxbfs@qu@pointref@start0
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
@@ -54,7 +53,7 @@
 \else\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
 
-\def\ltxbfs@@ldpt#1/#2;#3\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}}
+\def\ltxbfs@@ldpt#1/#2;#3;#4\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}\def\@curd{#4}}
 \def\ltxbfs@ldpt#1\@nil{\expandafter\ltxbfs@@ldpt#1\@nil}
 % end
 \def\ltxbfs@bfs#1{%
@@ -87,21 +86,21 @@
 \erawEnqueue{ltxbfs@pointq@#1}{\@curx/\@cury}%
 }
 
-\def\ltxbfs@bfs@trydir#1#2{%
+\def\ltxbfs@bfs@trydir#1#2#3{%
 \edef\@tx{#1}\edef\@ty{#2}%
 \ltxbfs@isvalidtarget\@tx\@ty{%
 \BlockMatrix{ltxbfs@bm}(\@tx/\@ty)%
 \advance\c@ltxbfs@qu@pointref\@ne% add another point queue
-\ExtendToPointPath{\number\c@ltxbfs@qu@pointref}{\@curp}%
-\erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref}%
+\expandafter\ExtendToPointPath\expandafter{\number\c@ltxbfs@qu@pointref}\@curp
+\erawEnqueue{ltxbfs@qu}{\@tx/\@ty;\number\c@ltxbfs@qu@pointref;#3}%
 }\relax}
 
 % TODO: order by current direction by saving (/w enqueue) it for point?
 \def\ltxbfs@bfs@nexts{%
 % add further points
-\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury+1}% up
-\ltxbfs@bfs@trydir{\@curx}{\the\numexpr\@cury-1}% down
-\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}{\@cury}% left
-\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}{\@cury}% right
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury+1}\z@% up
+\ltxbfs@bfs@trydir\@curx{\the\numexpr\@cury-1}\@ne% down
+\ltxbfs@bfs@trydir{\the\numexpr\@curx+1}\@cury\tw@% left
+\ltxbfs@bfs@trydir{\the\numexpr\@curx-1}\@cury\thr@@% right
 }
 \endinput
