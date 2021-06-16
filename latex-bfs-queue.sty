@@ -7,9 +7,7 @@
 \expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@
 }
 
-\def\DeclareQueue#1{%
-\ifcsname lbq@ds@q@#1\endcsname\ResetQueue{#1}\else
-\CreateQueue{#1}\fi}
+\def\DeclareQueue#1{\ifcsname lbq@ds@q@#1\endcsname\ResetQueue{#1}\else\CreateQueue{#1}\fi}
 \def\ResetQueue#1{%
 \expandafter\def\csname lbq@ds@q@#1\endcsname{}%
 \expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@}
@@ -23,8 +21,7 @@
 \expandafter\edef\csname @@lbq@ds@q@#1\endcsname{\the\numexpr\csname @@lbq@ds@q@#1\endcsname+1}
 \ifnum\csname @@lbq@ds@q@#1\endcsname=1 %
 \expandafter\def\csname lbq@ds@q@#1\endcsname{#2}\else
-\csappto{lbq@ds@q@#1}{,#2}\fi
-}
+\csappto{lbq@ds@q@#1}{,#2}\fi}
 
 \def\eEnqueue#1#2{\erawEnqueue{#1}{{#2}}}
 
