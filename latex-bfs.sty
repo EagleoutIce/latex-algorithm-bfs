@@ -42,7 +42,7 @@
 \expandafter\let\expandafter\ltxbfs@ifblocked\csname #5\endcsname
 \@ltxbfs@debug@state\@ltxbfs@start\@ltxbfs@end{Initialization}{}%
 \ltxbfs@setup@startstates\@ltxbfs@start
-\ltxbfs@bfs\@ltxbfs@end
+\ltxbfs@bfs
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
 \erawEnqueue{#6}{\@goalx/\@goaly}%
@@ -52,12 +52,13 @@
 
 \def\ltxbfs@@ldpt#1/#2;#3;#4\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}\def\@curd{#4}}
 \def\ltxbfs@ldpt#1\@nil{\expandafter\ltxbfs@@ldpt#1\@nil}
-\def\ltxbfs@bfs#1{%
+% expected \@ltxbfs@end to be set as the target coordinates
+\def\ltxbfs@bfs{%
 \loop
 % Pick point from the queue
 \Dequeue{ltxbfs@qu}%
 \expandafter\ltxbfs@ldpt\dequeued\@nil
-\lbfsma@ifpointinqueue(\@curx/\@cury) in {#1}{%
+\lbfsma@ifpointinqueue(\@curx/\@cury) in \@ltxbfs@end{%
     \edef\@goalx{\@curx}\edef\@goaly{\@cury}\edef\@goalp{\@curp}%
     \@ltxbfs@foundgoal@true\let\iterate\relax
 }{\ltxbfs@bfs@nexts}%
