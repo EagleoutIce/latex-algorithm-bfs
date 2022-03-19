@@ -35,18 +35,19 @@
 % (starts) -> (ends) [width x height]{IsItBlocked(x/y){yes}{no}}{result queue}
 \def\GetShortestPath(#1)->(#2)[#3x#4]#5#6{\begingroup
 \c@ltxbfs@qu@pointref0 \c@ltxbfs@qu@pointref@start0
+\def\@ltxbfs@start{#1}\def\@ltxbfs@end{#2}%
 \UpdateMatrix{ltxbfs@bm}{#3}{#4}%
 \ResetQueue{ltxbfs@qu}%
 \@ltxbfs@foundgoal@false
 \expandafter\let\expandafter\ltxbfs@ifblocked\csname #5\endcsname
-\@ltxbfs@debug@state{#1}{#2}{Initialization}{}%
-\ltxbfs@setup@startstates{#1}%
-\ltxbfs@bfs{#2}%
+\@ltxbfs@debug@state\@ltxbfs@start\@ltxbfs@end{Initialization}{}%
+\ltxbfs@setup@startstates\@ltxbfs@start
+\ltxbfs@bfs\@ltxbfs@end
 \if@ltxbfs@foundgoal@
 \AppendQueue{#6}{ltxbfs@pointq@\@goalp}%
 \erawEnqueue{#6}{\@goalx/\@goaly}%
-\@ltxbfs@debug@state{#1}{#2}{Final State}{ltxbfs@pointq@\@goalp}%
-\else\@ltxbfs@debug@state{#1}{#2}{Final State}{}%
+\@ltxbfs@debug@state\@ltxbfs@start\@ltxbfs@end{Final State}{ltxbfs@pointq@\@goalp}%
+\else\@ltxbfs@debug@state\@ltxbfs@start\@ltxbfs@end{Final State}{}%
 \fi\GlobalQueue{#6}\endgroup}
 
 \def\ltxbfs@@ldpt#1/#2;#3;#4\@nil{\def\@curx{#1}\def\@cury{#2}\def\@curp{#3}\def\@curd{#4}}
