@@ -37,8 +37,12 @@
 
 \begin{document}
 \DoTestQueue{\GlobalQueue{TestQueue}}\hfill
-\DoTestQueue{\GlobalQueue{TestQueue}}\\
+\DoTestQueue{\GlobalQueue{TestQueue}}\par
+The left queue is expected to remain with 4,5 while the right should remain with 1, 2, 3,4,5.
+
 \ResetQueue{TestQueue}%
-\DoTestQueue{}\hfill\DoTestQueue{}
+\DoTestQueue{}\hfill\DoTestQueue{}\par
+
+Both queues are expected to remain with 4,5.
 \end{document}
 

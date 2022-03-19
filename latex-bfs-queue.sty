@@ -9,7 +9,7 @@
 
 \def\DeclareQueue#1{\ifcsname lbq@ds@q@#1\endcsname\ResetQueue{#1}\else\CreateQueue{#1}\fi}
 \def\ResetQueue#1{%
-\expandafter\def\csname lbq@ds@q@#1\endcsname{}%
+\expandafter\let\csname lbq@ds@q@#1\endcsname\@empty
 \expandafter\let\csname @@lbq@ds@q@#1\endcsname\z@}
 
 \def\GetQueue#1{\csname lbq@ds@q@#1\endcsname}
